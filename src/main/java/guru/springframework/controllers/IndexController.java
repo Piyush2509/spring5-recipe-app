@@ -5,22 +5,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import guru.springframework.services.RecipeService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by piyush.b.kumar on May 16, 2018.
  */
+@Slf4j
 @Controller
 public class IndexController {
 	
 	private final RecipeService recipeService;	
 
 	public IndexController(RecipeService recipeService) {
-		super();
 		this.recipeService = recipeService;
 	}
 
 	@RequestMapping({"", "/", "index"})
 	public String getIndexPage(Model model) {
+		log.debug("Getting index page");
 		model.addAttribute("recipes", recipeService.getRecipes());
 		return "index";
 	}

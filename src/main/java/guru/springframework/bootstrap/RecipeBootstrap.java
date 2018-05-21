@@ -18,10 +18,12 @@ import guru.springframework.domain.UnitOfMeasure;
 import guru.springframework.repositories.CategoryRepository;
 import guru.springframework.repositories.RecipeRepository;
 import guru.springframework.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by piyush.b.kumar on May 21, 2018.
  */
+@Slf4j
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -39,6 +41,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		recipeRepository.saveAll(getRecipes());
+		log.debug("Loading Bootstrap data");
 	}
 
 	private List<Recipe> getRecipes() {
