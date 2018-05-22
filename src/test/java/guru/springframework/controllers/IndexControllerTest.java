@@ -18,7 +18,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
@@ -26,6 +25,9 @@ import org.springframework.ui.Model;
 import guru.springframework.domain.Recipe;
 import guru.springframework.services.RecipeService;
 
+/**
+ * Created by piyush.b.kumar on May 21, 2018.
+ */
 public class IndexControllerTest {
 	
 	@Mock
