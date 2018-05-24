@@ -14,26 +14,29 @@ import lombok.Synchronized;
 @Component
 public class IngredientToIngredientCommand implements Converter<Ingredient, IngredientCommand> {
 
-    private final UnitOfMeasureToUnitOfMeasureCommand uomConverter;
+	private final UnitOfMeasureToUnitOfMeasureCommand uomConverter;
 
-    public IngredientToIngredientCommand(UnitOfMeasureToUnitOfMeasureCommand uomConverter) {
-        this.uomConverter = uomConverter;
-    }
+	public IngredientToIngredientCommand(UnitOfMeasureToUnitOfMeasureCommand uomConverter) {
+		this.uomConverter = uomConverter;
+	}
 
-    @Synchronized
-    @Nullable
-    @Override
-    public IngredientCommand convert(Ingredient source) {
-        if (source == null) {
-            return null;
-        }
+	@Synchronized
+	@Nullable
+	@Override
+	public IngredientCommand convert(Ingredient source) {
+		if (source == null) {
+			return null;
+		}
 
-        IngredientCommand ingredientCommand = new IngredientCommand();
-        ingredientCommand.setId(source.getId());
-        ingredientCommand.setAmount(source.getAmount());
-        ingredientCommand.setDescription(source.getDescription());
-        ingredientCommand.setUnitOfMeasure(uomConverter.convert(source.getUom()));
-        return ingredientCommand;
-    }
-    
+		IngredientCommand ingredientCommand = new IngredientCommand();
+		ingredientCommand.setId(source.getId());
+		if (source.getRecipe() != null) {
+			ingredientCommand.setRecipeId(source.getRecipe().getId());
+		}
+		ingredientCommand.setAmount(source.getAmount());
+		ingredientCommand.setDescription(source.getDescription());
+		ingredientCommand.setUom(uomConverter.convert(source.getUom()));
+		return ingredientCommand;
+	}
+
 }
