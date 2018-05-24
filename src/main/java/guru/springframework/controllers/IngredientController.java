@@ -54,7 +54,7 @@ public class IngredientController {
 		// make sure we have a good recipe id value
 		@SuppressWarnings("unused")
 		RecipeCommand recipeCommand = recipeService.findCommandById(Long.valueOf(recipeId));
-		
+
 		// need to return back parent id for hidden form property
 		IngredientCommand ingredientCommand = new IngredientCommand();
 		ingredientCommand.setRecipeId(Long.valueOf(recipeId));
@@ -80,6 +80,13 @@ public class IngredientController {
 		log.debug("Saved recipe id: " + savedCommand.getRecipeId());
 		log.debug("Saved ingredient id: " + savedCommand.getId());
 		return "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredient/" + savedCommand.getId() + "/show";
+	}
+
+	@GetMapping("/recipe/{recipeId}/ingredient/{id}/delete")
+	public String deleteRecipeIngredient(@PathVariable String recipeId, @PathVariable String id) {
+		log.debug("Deleting ingredient id: " + id + " for recipe id: " + recipeId);
+		ingredientService.deleteRecipeIngredient(Long.valueOf(recipeId), Long.valueOf(id));
+		return "redirect:/recipe/" + recipeId + "/ingredients";
 	}
 
 }
