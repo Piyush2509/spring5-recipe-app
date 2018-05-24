@@ -27,7 +27,7 @@ import guru.springframework.repositories.RecipeRepository;
 /**
  * Created by piyush.b.kumar on May 21, 2018.
  */
-public class RecipeServiceTest {
+public class RecipeServiceImplTest {
 
 	RecipeService recipeService;
 
@@ -74,32 +74,32 @@ public class RecipeServiceTest {
 		verify(recipeRepository, never()).findAll();
 	}
 
-    @Test
-    public void findCommandByIdTest() throws Exception {
-        Recipe recipe = new Recipe();
-        recipe.setId(1L);
-        Optional<Recipe> recipeOptional = Optional.of(recipe);
+	@Test
+	public void findCommandByIdTest() throws Exception {
+		Recipe recipe = new Recipe();
+		recipe.setId(1L);
+		Optional<Recipe> recipeOptional = Optional.of(recipe);
 
-        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+		when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
 
-        RecipeCommand recipeCommand = new RecipeCommand();
-        recipeCommand.setId(1L);
+		RecipeCommand recipeCommand = new RecipeCommand();
+		recipeCommand.setId(1L);
 
-        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+		when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
 
-        RecipeCommand commandById = recipeService.findCommandById(1L);
+		RecipeCommand commandById = recipeService.findCommandById(1L);
 
-        assertNotNull("Null recipe returned", commandById);
-        verify(recipeRepository, times(1)).findById(anyLong());
-        verify(recipeRepository, never()).findAll();
-    }
+		assertNotNull("Null recipe returned", commandById);
+		verify(recipeRepository, times(1)).findById(anyLong());
+		verify(recipeRepository, never()).findAll();
+	}
 
-    @Test
-    public void deleteByIdTest() throws Exception {
-    	Long idToDelete = 2L;
-    	recipeService.deleteById(idToDelete);
-    	
-    	verify(recipeRepository, times(1)).deleteById(anyLong());
-    }
+	@Test
+	public void deleteByIdTest() throws Exception {
+		Long idToDelete = 2L;
+		recipeService.deleteById(idToDelete);
+
+		verify(recipeRepository, times(1)).deleteById(anyLong());
+	}
 
 }
