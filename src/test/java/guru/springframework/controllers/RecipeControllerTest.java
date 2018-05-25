@@ -69,6 +69,11 @@ public class RecipeControllerTest {
 	}
 
 	@Test
+	public void testShowByIdNumberFormatException() throws Exception {
+		mockMvc.perform(get("/recipe/asdf/show")).andExpect(status().isBadRequest()).andExpect(view().name("400error"));
+	}
+
+	@Test
 	public void testNewRecipe() throws Exception {
 		when(categoryService.listAllCategories()).thenReturn(new HashSet<>());
 
