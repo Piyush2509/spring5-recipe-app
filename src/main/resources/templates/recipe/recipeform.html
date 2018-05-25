@@ -43,8 +43,7 @@
 									<div class="col-md-9 form-group">
 										<div class="radio">
 											<label> 
-												<input type="checkbox" value="" /> 
-												Cat 1
+												<input type="checkbox" th:each="categoryEach:${categoryList}" th:value="${categoryEach.id}" th:checked="${recipe.categories.contains(categoryEach)}" th:text="${categoryEach.description}" name="categoryArray"/> 
 											</label>
 										</div>
 										<div class="radio" th:remove="all">

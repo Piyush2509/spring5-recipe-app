@@ -1,5 +1,6 @@
 package guru.springframework.commands;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,8 +11,9 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class CategoryCommand {
-	
+
 	private Long id;
 	private String description;
 

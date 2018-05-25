@@ -6,6 +6,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.HashSet;
+
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.times;
@@ -21,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import guru.springframework.commands.RecipeCommand;
 import guru.springframework.domain.Recipe;
+import guru.springframework.services.CategoryService;
 import guru.springframework.services.RecipeService;
 
 /**
@@ -31,6 +35,9 @@ public class RecipeControllerTest {
 	@Mock
 	RecipeService recipeService;
 
+	@Mock
+	CategoryService categoryService;
+
 	RecipeController recipeController;
 
 	MockMvc mockMvc;
@@ -38,7 +45,7 @@ public class RecipeControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		recipeController = new RecipeController(recipeService);
+		recipeController = new RecipeController(recipeService, categoryService);
 		mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 	}
 
@@ -55,8 +62,12 @@ public class RecipeControllerTest {
 
 	@Test
 	public void testNewRecipe() throws Exception {
+		when(categoryService.listAllCategories()).thenReturn(new HashSet<>());
+
 		mockMvc.perform(get("/recipe/new")).andExpect(status().isOk()).andExpect(view().name("recipe/recipeform"))
-				.andExpect(model().attributeExists("recipe"));
+				.andExpect(model().attributeExists("recipe")).andExpect(model().attributeExists("categoryList"));
+
+		verify(categoryService, times(1)).listAllCategories();
 	}
 
 	@Test
@@ -65,9 +76,13 @@ public class RecipeControllerTest {
 		command.setId(2L);
 
 		when(recipeService.findCommandById(anyLong())).thenReturn(command);
+		when(categoryService.listAllCategories()).thenReturn(new HashSet<>());
 
 		mockMvc.perform(get("/recipe/1/update")).andExpect(status().isOk()).andExpect(view().name("recipe/recipeform"))
-				.andExpect(model().attributeExists("recipe"));
+				.andExpect(model().attributeExists("recipe")).andExpect(model().attributeExists("categoryList"));
+
+		verify(recipeService, times(1)).findCommandById(anyLong());
+		verify(categoryService, times(1)).listAllCategories();
 	}
 
 	@Test
