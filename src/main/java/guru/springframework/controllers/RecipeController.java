@@ -5,9 +5,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,6 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class RecipeController {
 
+	private static final String RECIPE_RECIPEFORM_URL = "recipe/recipeform";
+
 	private final RecipeService recipeService;
 
 	private final CategoryService categoryService;
@@ -52,7 +57,7 @@ public class RecipeController {
 		log.debug("Getting new recipe form");
 		model.addAttribute("recipe", new RecipeCommand());
 		model.addAttribute("categoryList", categoryService.listAllCategories());
-		return "recipe/recipeform";
+		return RECIPE_RECIPEFORM_URL;
 	}
 
 	@GetMapping("/recipe/{id}/update")
@@ -60,12 +65,22 @@ public class RecipeController {
 		log.debug("Getting recipe form for update for id: " + id);
 		model.addAttribute("recipe", recipeService.findCommandById(Long.valueOf(id)));
 		model.addAttribute("categoryList", categoryService.listAllCategories());
-		return "recipe/recipeform";
+		return RECIPE_RECIPEFORM_URL;
 	}
 
 	@PostMapping("recipe")
-	public String saveRecipe(@ModelAttribute RecipeCommand command, @RequestParam String[] categoryArray) {
+	public String saveRecipe(@Valid @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult,
+			@RequestParam String[] categoryArray) {
 		log.debug("Saving or updating recipe");
+
+		if (bindingResult.hasErrors()) {
+			bindingResult.getAllErrors().forEach(objectError -> {
+				log.debug(objectError.toString());
+			});
+
+			return RECIPE_RECIPEFORM_URL;
+		}
+
 		Set<CategoryCommand> categoryList = categoryService.listAllCategories();
 		List<String> list = Arrays.asList(categoryArray);
 		Set<CategoryCommand> recipeCategories = categoryList.stream()
